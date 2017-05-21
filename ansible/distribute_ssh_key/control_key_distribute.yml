@@ -1,0 +1,19 @@
+---
+- name: Ensure public key is present in this server
+  hosts: controller
+  tasks:
+    - authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        state: present
+
+- name: Copy Local key to remote server
+  hosts: target_hosts
+  remote_user: "{{ ansible_user }}"
+  tasks:
+    - blockinfile:
+        dest: /root/.ssh/authorized_keys
+        block: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        create: yes
+      become: yes
+      become_method: sudo
