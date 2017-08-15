@@ -1,0 +1,5 @@
+# Check SSH Connectivity to remote Hosts
+ansible -m ping -i <inventory_file> <hostname>
+
+# Execute Ansible Playbook
+ansible-playbook -i <inventory_file> -u <LinuxAccount> <Playbook_file>
