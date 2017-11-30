@@ -1,0 +1,8 @@
+docker_mode="<docker_mode>"
+box1_name="<box1_name>"
+box2_name="<box2_name>"
+subnet_prefix="<subnet_prefix>"
+container1_name="<container1_name>"
+container2_name="<container2_name>"
+container1_ip="<container1_ip>"
+container2_ip="<container2_ip>"

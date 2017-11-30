@@ -6,11 +6,11 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 
-EXIST_POST=<0 or 1>
+IS_SWARM=<IS_SWARM>
 CLUSTER_NUMBERS=<CLUSTER_NUMBERS>
 CONTROL_NUMBERS=<CONTROL_NUMBERS>
 CLIENT_NUMBERS=<CLIENT_NUMBERS>
-TEST_TITLE=<TEST_TITLE>
+TEST_TITLE="nettest"
 
 CONTROL_CPU="1"
 CONTROL_RAM="1024"
@@ -20,22 +20,6 @@ CLIENT_RAM="1024"
 Vagrant.configure("2") do |config|
     config.vm.box = "ubuntu/xenial64"
     config.vm.provision :shell, path: "init.sh"
-
-    if EXIST_POST == 1
-        config.vm.define "#{TEST_TITLE}-post" do |ob|
-            ob.vm.hostname = "#{TEST_TITLE}-post"
-            ob.vm.synced_folder "../../multi-swarm-networking", "/opt/ms_net"
-            (1..CLUSTER_NUMBERS).each do |k|
-                ob.vm.network "private_network", ip: "192.168.11#{k}.100"
-            end
-            ob.vm.provider "virtualbox" do |v|
-                v.name = "#{TEST_TITLE}-post"
-                v.cpus = OPENBATON_CPU
-                v.memory = OPENBATON_RAM
-            end
-            ob.vm.provision :shell, path: "init_post.sh"
-        end
-    end
 
     (1..CLUSTER_NUMBERS).each do |k|
         (1..CONTROL_NUMBERS).each do |i|
@@ -48,7 +32,19 @@ Vagrant.configure("2") do |config|
                     v.memory = CONTROL_RAM
                     v.cpus = CONTROL_CPU
                 end
-                ctrl.vm.provision :shell, path: "init_control.sh"
+
+                if IS_SWARM == 1
+                    if i == 1
+                        ctrl.vm.provision :shell, inline: "docker swarm init --advertise-addr=192.168.12#{k}.10#{i}"
+                        ctrl.vm.provision :shell, inline: "docker swarm join-token manager | grep docker > /vagrant/join#{k}.mng"
+                        ctrl.vm.provision :shell, inline: "docker swarm join-token worker | grep docker > /vagrant/join#{k}.wkr"
+                    else
+                        ctrl.vm.provision :shell, inline: "bash /vagrant/join#{k}.mng"
+                        if i == CONTROL_NUMBERS
+                            ctrl.vm.provision :shell, inline: "rm /vagrant/join#{k}.mng"
+                        end            
+                    end
+                end
             end
         end
 
@@ -63,7 +59,13 @@ Vagrant.configure("2") do |config|
                     v.memory = CLIENT_RAM
                     v.cpus = CLIENT_CPU
                 end
-                cli.vm.provision :shell, path: "init_client.sh"
+
+                if IS_SWARM == 1
+                    cli.vm.provision :shell, inline: "bash /vagrant/join#{k}.wkr"
+                    if j == CLIENT_NUMBERS
+                        cli.vm.provision :shell, inline: "rm /vagrant/join#{k}.wkr"
+                    end
+                end
             end
         end
     end
