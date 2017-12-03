@@ -1,0 +1,17 @@
+odl-dlux-core
+odl-dluxapps-applications
+odl-restconf-all
+odl-ovsdb-southbound-impl
+odl-ovsdb-southbound-impl-rest
+odl-ovsdb-southbound-api
+odl-ovsdb-southbound-impl-ui
+
+odl-openflowplugin-flow-services
+odl-openflowplugin-flow-services-rest
+odl-openflowplugin-flow-services-ui
+odl-openflowplugin-app-topology
+odl-openflowplugin-app-table-miss-enforcer
+odl-openflowplugin-app-notifications
+odl-openflowplugin-app-forwardingrules-manager
+odl-openflowplugin-app-config-pusher
+odl-openflowplugin-southbound
