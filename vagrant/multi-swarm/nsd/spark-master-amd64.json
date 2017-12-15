@@ -1,0 +1,78 @@
+{
+  "name":"SparkMasterOnly",
+  "vendor":"Fokus",
+  "version":"0.1",
+  "vnfd":[
+    {
+      "version":"0.1",
+      "name":"spark_master",
+      "vendor":"Fokus",
+      "type":"client",
+      "endpoint":"docker-swarm",
+      "configurations":{
+        "name":"docker.swarm",
+        "configurationParameters":[
+          {
+            "confKey": "publish_ports",
+            "value": "8070,7077,6066,4040,8080,6065,8081,20001,20002,20003,20004,20005,2006,20007,20008,20009,20010,20011,20012,20013,20014,20015,20016"
+          },
+          {
+            "confKey": "env",
+            "value": "SPARK_MASTER_HOST=127.0.0.1 SPARK_LOCAL_HOSTNAME=127.0.0.1 SPARK_PUBLIC_DNS=127.0.0.1 SPARK_PUBLIC_IDENT_STRING=127.0.0.1"
+          }
+        ]
+      },
+      "vdu":[
+        {
+          "vm_image":[
+            "192.168.111.101:5000/zeppelin_spark"
+          ],
+          "scale_in_out":1,
+          "vnfc":[
+            {
+              "connection_point":[
+                {
+                  "virtual_link_reference":"spark_network",
+                  "interfaceId":0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "virtual_link":[
+        {
+          "name":"spark_network"
+        }
+      ],
+      "lifecycle_event":[
+      ],
+      "deployment_flavour":[
+        {
+          "flavour_key":"container_key"
+        }
+      ]
+    }
+  ],
+  "vnffgd":[
+
+  ],
+  "vld":[
+    {
+      "name":"spark_network"
+    }
+  ],
+  "vnf_dependency":[
+    {
+      "source":{
+        "name":"spark_master"
+      },
+      "target":{
+        "name":"spark_worker"
+      },
+      "parameters":[
+        "spark_network"
+      ]
+    }
+  ]
+}

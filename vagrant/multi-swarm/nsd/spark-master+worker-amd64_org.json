@@ -1,0 +1,128 @@
+{
+  "name":"Spark Analytics",
+  "vendor":"Fokus",
+  "version":"0.1",
+  "vnfd":[
+    {
+      "version":"0.1",
+      "name":"spark-master",
+      "vendor":"Fokus",
+      "type":"client",
+      "endpoint":"docker-swarm",
+      "configurations":{
+        "name":"docker.swarm",
+        "configurationParameters":[
+          {
+            "confKey": "publish_ports",
+            "value": "8070,7077,6066"
+          },
+          {
+            "confKey": "constraints",
+            "value": "node.platform.arch==armv7l"
+          }
+        ]
+      },
+      "vdu":[
+        {
+          "vm_image":[
+            "192.168.162.201:5000/master_spark_arm"
+          ],
+          "scale_in_out":1,
+          "vnfc":[
+            {
+              "connection_point":[
+                {
+                  "virtual_link_reference":"spark_network",
+                  "interfaceId":0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "virtual_link":[
+        {
+          "name":"spark_network"
+        }
+      ],
+      "lifecycle_event":[
+      ],
+      "deployment_flavour":[
+        {
+          "flavour_key":"container_key"
+        }
+      ]
+    },
+    {
+      "version":"0.1",
+      "name":"spark-worker",
+      "vendor":"Fokus",
+      "type":"client",
+      "endpoint":"docker-swarm",
+      "configurations":{
+        "name":"docker.swarm",
+        "configurationParameters":[
+          {
+            "confKey": "args",
+            "value": "spark://<ip>:7077"
+          },
+          {
+            "confKey": "constraints",
+            "value": "node.platform.arch==armv7l"
+          }
+        ]
+      },
+      "vdu":[
+        {
+          "vm_image":[
+            "192.168.162.201:5000/worker_spark_arm"
+          ],
+          "scale_in_out":4,
+          "vnfc":[
+            {
+              "connection_point":[
+                {
+                  "virtual_link_reference":"spark_network",
+                  "interfaceId":0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "virtual_link":[
+        {
+          "name":"spark_network"
+        }
+      ],
+      "lifecycle_event":[
+      ],
+      "deployment_flavour":[
+        {
+          "flavour_key":"container_key"
+        }
+      ]
+    }
+  ],
+  "vnffgd":[
+
+  ],
+  "vld":[
+    {
+      "name":"spark_network"
+    }
+  ],
+  "vnf_dependency":[
+    {
+      "source":{
+        "name":"spark-master"
+      },
+      "target":{
+        "name":"spark-worker"
+      },
+      "parameters":[
+        "spark_network"
+      ]
+    }
+  ]
+}
