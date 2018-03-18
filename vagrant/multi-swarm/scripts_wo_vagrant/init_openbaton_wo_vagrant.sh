@@ -32,6 +32,6 @@ if [ `id -u` -ne 0 ]; then
     exit 1
 fi
 
-#install_basic_package
-#install_docker
+install_basic_package
+install_docker
 launch_openbaton_docker
