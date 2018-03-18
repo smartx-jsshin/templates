@@ -22,7 +22,7 @@ ln -s /var/run/docker/netns /var/run/netns
 launch_openbaton_docker(){
 OB_VER="${1:-5.0.0}"
 sudo docker pull "openbaton/standalone:${OB_VER}"
-sudo docker run --name openbaton -d -h openbaton-rabbitmq \
+sudo docker run --name openbaton -d --restart unless-stopped -h openbaton-rabbitmq \
     -p 8080:8080 -p 5672:5672 -p 15672:15672 -p 8443:8443 -e RABBITMQ_BROKERIP=127.0.0.1 \
     "openbaton/standalone:${OB_VER}"
 }
@@ -32,6 +32,6 @@ if [ `id -u` -ne 0 ]; then
     exit 1
 fi
 
-install_basic_package
-install_docker
+#install_basic_package
+#install_docker
 launch_openbaton_docker
