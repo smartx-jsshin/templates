@@ -19,6 +19,10 @@ adduser $DEFAULT_USER docker
 ln -s /var/run/docker/netns /var/run/netns
 }
 
+init_swarm_mode(){
+  docker swarm init --advertise-addr ${SWARM_CTRL_IPADDR}
+}
+
 enable_swarm_remote_access(){
 sudo mkdir -p /lib/systemd/system/docker.service.d
 
@@ -57,6 +61,7 @@ fi
 
 install_basic_package
 install_docker
+init_swarm_mode
 enable_swarm_remote_access
 execute_docker_registry
 load_test_image_to_docker_registry
