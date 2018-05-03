@@ -1,5 +1,0 @@
-[controller]
-172.20.91.226 ansible_user=netcs 
-
-[target_hosts]
-172.20.91.228 ansible_user=netcs
