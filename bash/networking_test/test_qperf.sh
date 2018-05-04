@@ -2,8 +2,8 @@
 
 ## Testing Parameters ##
 TARGET_IP="<Target IP Address>"
-TRIAL_NUM=10
-QPERF_TEST_TIME=10
+TRIAL_NUM=5
+QPERF_TEST_TIME=5
 QPERF_LISTEN_PORT="19765"
 QPERF_TEST_PORT="19766"
 ########################
@@ -29,7 +29,7 @@ do
 	TOTAL_SUM_BW=`echo $TOTAL_SUM_BW + $BW | bc`
 	TOTAL_SUM_LAT=`echo $TOTAL_SUM_LAT + $LAT | bc`
 	echo "Trial #${i} Bandwidth: $BW, Latency $LAT"
-	sleep 5
+	sleep 2
 done
 
 echo ""
@@ -37,4 +37,4 @@ echo ""
 echo "Average Bandwidth of ${TRIAL_NUM} trials: `echo "scale=3; ${TOTAL_SUM_BW}/${TRIAL_NUM}" | bc`"
 echo "Average Latency of ${TRIAL_NUM} trials: `echo "scale=3; ${TOTAL_SUM_LAT}/${TRIAL_NUM}" | bc`"
 echo ""
-echo "Ping Test Finished!!"
+echo "Qperf Test Finished!!"
