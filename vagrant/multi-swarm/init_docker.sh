@@ -1,5 +1,5 @@
 #!/bin/bash
-export DEFAULT_USER="ubuntu"
+export DEFAULT_USER="jun"
 
 install_basic_package(){
 apt-get update
@@ -16,7 +16,6 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get -y update
 sudo apt-get -y install docker-ce
 adduser $DEFAULT_USER docker
-sudo ln -s /var/run/docker/netns /var/run/netns
 }
 
 install_basic_package
